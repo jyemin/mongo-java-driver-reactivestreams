@@ -16,15 +16,19 @@
 
 package com.mongodb.reactivestreams.client.internal
 
-import com.mongodb.async.client.AggregateIterable
+import com.mongodb.async.client.ChangeStreamIterable
 import com.mongodb.client.model.Collation
+import org.bson.BsonDocument
+import org.bson.BsonInt32
 import org.bson.Document
 import org.reactivestreams.Subscriber
 import spock.lang.Specification
 
 import java.util.concurrent.TimeUnit
 
-class AggregatePublisherImplSpecification  extends Specification {
+import static com.mongodb.client.model.FullDocument.UPDATE_LOOKUP
+
+class ChangeStreamPublisherImplSpecification extends Specification {
 
     def 'should call the underlying wrapped methods'() {
         given:
@@ -33,8 +37,8 @@ class AggregatePublisherImplSpecification  extends Specification {
             onSubscribe(_) >> { args -> args[0].request(100) }
         }
 
-        def wrapped = Mock(AggregateIterable)
-        def publisher = new AggregatePublisherImpl<Document>(wrapped)
+        def wrapped = Mock(ChangeStreamIterable)
+        def publisher = new ChangeStreamPublisherImpl<Document>(wrapped)
 
         when:
         publisher.subscribe(subscriber)
@@ -44,37 +48,21 @@ class AggregatePublisherImplSpecification  extends Specification {
 
         when: 'setting options'
         publisher = publisher
-                .allowDiskUse(true)
-                .bypassDocumentValidation(true)
+                .fullDocument(UPDATE_LOOKUP)
+                .resumeAfter(new BsonDocument('_id', new BsonInt32(4)))
                 .collation(collation)
-                .maxTime(1, TimeUnit.SECONDS)
                 .maxAwaitTime(2, TimeUnit.SECONDS)
-                .useCursor(true)
 
         then:
-        1 * wrapped.allowDiskUse(true) >> wrapped
-        1 * wrapped.bypassDocumentValidation(true) >> wrapped
+        1 * wrapped.fullDocument(UPDATE_LOOKUP) >> wrapped
+        1 * wrapped.resumeAfter(new BsonDocument('_id', new BsonInt32(4))) >> wrapped
         1 * wrapped.collation(collation) >> wrapped
-        1 * wrapped.maxTime(1, TimeUnit.SECONDS) >> wrapped
         1 * wrapped.maxAwaitTime(2, TimeUnit.SECONDS) >> wrapped
-        1 * wrapped.useCursor(true) >> wrapped
 
         when:
         publisher.subscribe(subscriber)
 
         then:
         1 * wrapped.batchCursor(_)
-
-        when: 'calling toCollection'
-        publisher.toCollection()
-
-        then:
-        0 * wrapped.toCollection(_)
-
-        when:
-        publisher.toCollection().subscribe(subscriber)
-
-        then:
-        1 * wrapped.toCollection(_)
     }
 }

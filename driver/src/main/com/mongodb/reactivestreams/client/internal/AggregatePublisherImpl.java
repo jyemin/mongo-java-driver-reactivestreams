@@ -30,7 +30,7 @@ import static com.mongodb.assertions.Assertions.notNull;
 import static com.mongodb.async.client.Observables.observe;
 import static com.mongodb.reactivestreams.client.internal.PublisherHelper.voidToSuccessCallback;
 
-
+@SuppressWarnings("deprecation")
 final class AggregatePublisherImpl<TResult> implements AggregatePublisher<TResult> {
 
     private final com.mongodb.async.client.AggregateIterable<TResult> wrapped;
@@ -49,6 +49,12 @@ final class AggregatePublisherImpl<TResult> implements AggregatePublisher<TResul
     @Override
     public AggregatePublisher<TResult> maxTime(final long maxTime, final TimeUnit timeUnit) {
         wrapped.maxTime(maxTime, timeUnit);
+        return this;
+    }
+
+    @Override
+    public AggregatePublisher<TResult> maxAwaitTime(final long maxAwaitTime, final TimeUnit timeUnit) {
+        wrapped.maxAwaitTime(maxAwaitTime, timeUnit);
         return this;
     }
 
