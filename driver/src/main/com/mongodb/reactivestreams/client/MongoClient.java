@@ -122,7 +122,7 @@ public interface MongoClient extends Closeable {
      *
      * @return a publisher for the client session.
      * @mongodb.server.release 3.6
-     * @since 1.8
+     * @since 1.9
      */
     Publisher<ClientSession> startSession();
 

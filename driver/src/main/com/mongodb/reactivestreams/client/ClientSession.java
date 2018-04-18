@@ -23,7 +23,7 @@ import org.reactivestreams.Publisher;
 /**
  * A client session that supports transactions.
  *
- * @since 1.8
+ * @since 1.9
  */
 public interface ClientSession extends com.mongodb.session.ClientSession {
     /**
