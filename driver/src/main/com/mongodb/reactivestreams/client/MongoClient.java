@@ -19,7 +19,6 @@ package com.mongodb.reactivestreams.client;
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.annotations.Immutable;
 import com.mongodb.async.client.MongoClientSettings;
-import com.mongodb.session.ClientSession;
 import org.bson.Document;
 import org.reactivestreams.Publisher;
 
@@ -117,6 +116,15 @@ public interface MongoClient extends Closeable {
      * @since 1.7
      */
     <TResult> ListDatabasesPublisher<TResult> listDatabases(ClientSession clientSession, Class<TResult> clazz);
+
+    /**
+     * Creates a client session.
+     *
+     * @return a publisher for the client session.
+     * @mongodb.server.release 3.6
+     * @since 1.8
+     */
+    Publisher<ClientSession> startSession();
 
     /**
      * Creates a client session.
