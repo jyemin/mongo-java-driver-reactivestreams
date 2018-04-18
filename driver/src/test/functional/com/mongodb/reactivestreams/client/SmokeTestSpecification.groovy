@@ -25,6 +25,8 @@ import spock.lang.IgnoreIf
 
 import static Fixture.getMongoClient
 import static com.mongodb.reactivestreams.client.Fixture.getConnectionString
+import static com.mongodb.reactivestreams.client.Fixture.isReplicaSet
+import static com.mongodb.reactivestreams.client.Fixture.serverVersionAtLeast
 import static java.util.concurrent.TimeUnit.SECONDS
 
 class SmokeTestSpecification extends FunctionalSpecification {
@@ -144,7 +146,7 @@ class SmokeTestSpecification extends FunctionalSpecification {
         !run('the collection name is no longer in the collectionNames list', database.&listCollectionNames).contains(collectionName)
     }
 
-    // IgnoreIf({ !(serverVersionAtLeast(3, 7) && isReplicaSet() })
+    @IgnoreIf({ !(serverVersionAtLeast(3, 7) && isReplicaSet()) })
     def 'should commit a transaction'() {
         given:
         run('create collection', database.&createCollection, collection.namespace.collectionName)
@@ -159,7 +161,7 @@ class SmokeTestSpecification extends FunctionalSpecification {
         run('The count is one', collection.&count)[0] == 1
     }
 
-    // IgnoreIf({ !(serverVersionAtLeast(3, 7) && isReplicaSet() })
+    @IgnoreIf({ !(serverVersionAtLeast(3, 7) && isReplicaSet()) })
     def 'should abort a transaction'() {
         given:
         run('create collection', database.&createCollection, collection.namespace.collectionName)
