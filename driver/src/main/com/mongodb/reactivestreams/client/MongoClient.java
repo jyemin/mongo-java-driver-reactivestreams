@@ -120,7 +120,7 @@ public interface MongoClient extends Closeable {
      */
     <TResult> ListDatabasesPublisher<TResult> listDatabases(ClientSession clientSession, Class<TResult> clazz);
 
-        /**
+    /**
      * Creates a change stream for this client.
      *
      * @return the change stream iterable
