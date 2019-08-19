@@ -82,4 +82,6 @@ public interface ClientSession extends com.mongodb.session.ClientSession {
      * @mongodb.server.release 4.0
      */
     Publisher<Void> abortTransaction();
+
+    boolean notifyMessageSent();
 }
