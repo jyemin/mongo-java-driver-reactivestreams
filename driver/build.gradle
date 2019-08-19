@@ -25,6 +25,7 @@ dependencies {
     compile 'org.mongodb:mongodb-driver-async:3.11.0'
     compile 'org.reactivestreams:reactive-streams:1.0.2'
 
+    testCompile 'org.mongodb:mongodb-driver-sync:3.11.0'
     testCompile 'org.reactivestreams:reactive-streams-tck:1.0.2'
 }
 
